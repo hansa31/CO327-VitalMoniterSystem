@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 
 public class Monitor implements Serializable, Runnable {
+
     private final InetAddress ip;
     private final String monitorID;
     private final int port;
@@ -31,6 +32,7 @@ public class Monitor implements Serializable, Runnable {
         this.port = port;
     }
 
+    //establish tcp connection
     public void waitForGatewayConnection() {
         ServerSocket serverSocket = null;
         Socket clientSocket = null;

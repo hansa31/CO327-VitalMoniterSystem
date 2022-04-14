@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.util.concurrent.TimeUnit;
 
 public class VitalMonitor {
+
     public static void main(String[] args) {
         String monitorId = args[0];
         int port = Integer.parseInt(args[1]);
@@ -19,10 +20,15 @@ public class VitalMonitor {
 
         // Create a new vital monitor
         Monitor monitor = new Monitor(ipAddress, monitorId, port);
+
+        //converts the monitor object to a byte array
         byte[] monitorInBytes = convertToByteArray(monitor);
 
+        // Establishing UDP connection(broadcast?)
         // Create a broadcast socket to publish monitor identity information
-        int BROADCAST_PORT = 6000;
+        int BROADCAST_PORT = 6000;      //server should listen in this port
+        
+        //socket to send and receive datagrampackets
         DatagramSocket broadcastSocket = createBroadcastSocket();
 
         // Create a thread to wait for incoming TCP connections from the Gateway
@@ -31,11 +37,13 @@ public class VitalMonitor {
         customDelayInSeconds(2);
 
         while (true) {
+            //Monitor identity is broadcasted to the IP of the computer to the port 6000 via broadcast socket
             broadcastMonitorIdentity(monitorInBytes, ipAddress, BROADCAST_PORT, broadcastSocket);
         }
 
     }
 
+    //get the ipAddress of the computer
     private static InetAddress getIPAddressOfComputer() {
         InetAddress ip_address = null;
         try {
@@ -49,6 +57,7 @@ public class VitalMonitor {
         return ip_address;
     }
 
+    //converts a monitor object to a byte array
     private static byte[] convertToByteArray(Monitor monitor) {
         byte[] data = null;
         try {
@@ -63,10 +72,12 @@ public class VitalMonitor {
         return data;
     }
 
+
     private static DatagramSocket createBroadcastSocket() {
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket();
+            //turn on the broadcast
             socket.setBroadcast(true);
         } catch (SocketException e) {
             e.printStackTrace();
@@ -74,6 +85,7 @@ public class VitalMonitor {
         return socket;
     }
 
+    // just to give a delay of 2s
     private static void customDelayInSeconds(int seconds) {
         try {
             TimeUnit.SECONDS.sleep(seconds);
