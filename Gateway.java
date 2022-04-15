@@ -11,6 +11,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Gateway{
 
@@ -32,6 +34,9 @@ public class Gateway{
     //get the received monitor
     public Monitor receivedMonitor = null;
 
+    //store monitor IDs
+    List<String> ids = new ArrayList<>();
+
     public void initConnection() throws ClassNotFoundException{
 
         while(true){
@@ -41,14 +46,23 @@ public class Gateway{
                 //Monitor receivedMonitor = convertToMonitor(packet.getData());
                 
                 receivedMonitor = convertToMonitor(packet.getData());
+                ids.add(receivedMonitor.getMonitorID());
+
+                /*
+                if (ids.contains(receivedMonitor.getMonitorID())){
+                    break;
+                }
+                */
+
                 String monitorDis=receivedMonitor.monitor_str();
-                System.out.println(monitorDis);
+                //System.out.println(monitorDis);
 
                 //multithrading
                 myThreadThing m1 = new myThreadThing(receivedMonitor);
                 Thread myThread = new Thread(m1);
                 //initTcpConnection(receivedMonitor);
                 myThread.start();
+
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
