@@ -23,7 +23,7 @@ public class Monitor implements Serializable, Runnable {
     }
 
     public String monitor_str() {
-        return "Monitor ID: " + ip + " IP: " + monitorID + " PORT:" + port;
+        return "Monitor ID: " + monitorID + " IP: " + ip + " PORT:" + port;
     }
 
     public Monitor(InetAddress ip, String monitorID, int port) {
@@ -32,7 +32,7 @@ public class Monitor implements Serializable, Runnable {
         this.port = port;
     }
 
-    //establish tcp connection
+    //wait for incoming TCP connections from the Gateway method 
     public void waitForGatewayConnection() {
         ServerSocket serverSocket = null;
         Socket clientSocket = null;
@@ -70,4 +70,6 @@ public class Monitor implements Serializable, Runnable {
     public void run() {
         this.waitForGatewayConnection();
     }
+
+    
 }
